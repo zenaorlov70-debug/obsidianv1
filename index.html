@@ -2129,11 +2129,19 @@ function applyAmbilight(imgSrc) {
   const bg = document.getElementById('ambilight-bg');
   if (!bg) return;
   if (!imgSrc) { bg.classList.remove('active'); bg.style.background = ''; return; }
+
+  // 🛑 НОВАЯ СТРОЧКА ЗАЩИТЫ: Отменяем Ambilight для чужих ссылок из интернета, чтобы избежать ошибки CORS
+  if (imgSrc.startsWith('http')) {
+    bg.classList.remove('active');
+    return;
+  }
+
   // Extract dominant colors by drawing to canvas
   const img = new Image();
   img.crossOrigin = 'anonymous';
   img.onload = () => {
     try {
+      // ... дальше идет твой старый код без изменений
       if (!_ambilightCanvas) { _ambilightCanvas = document.createElement('canvas'); }
       _ambilightCanvas.width = 8; _ambilightCanvas.height = 8;
       const ctx = _ambilightCanvas.getContext('2d');
